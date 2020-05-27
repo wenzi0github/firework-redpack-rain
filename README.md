@@ -6,8 +6,14 @@
 npm run build
 ```
 
+### 测试
+
 并且集成了 jest 框架的测试功能，执行以下的命令即可：
 
 ```shell
 npm run test
 ```
+
+### 格式化
+
+这里使用 prettier 进行格式化操作，并配合 tslint 进行格式化的检查。
