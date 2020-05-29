@@ -1,23 +1,95 @@
 # 使用 typescript 开发 npm 包的配置模板
 
+### 背景介绍(Background)
+
+[![version](https://img.shields.io/npm/v/gh-qqnews-report?color=brightgreen&style=flat-square)](https://www.npmjs.com/package/gh-qqnews-report)
+![size](https://img.shields.io/bundlephobia/min/gh-qqnews-report)
+
+在日常的工作中，经常会有重复性的功能，这里就可以提炼成为一个组件。那么如何将其提炼出来，并发布为 npm 包呢。这个仓库就是提供一个模板。
+
 这是一个纯 typescript 开发的 npm 包，没有 react 和 vue 等框架。
 
+这里的徽章标签可以去 [https://img.shields.io](https://img.shields.io) 生成。
+
+-   集成了 jest 的测试框架，可以直接在**\_\_tests\_\_**的目录编写测试样例。
+-   使用 prettier 进行格式化操作，并配合 tslint 进行格式化的检查
+-   采用 husky + commitlint 规范 git 的提交信息
+
+### 安装(Install)
+
+本模板的安装是从 git 仓库 clone 下来，然后安装 npm 包后，即可进行开发，开箱即用。
+
+下载：
+
 ```shell
-npm run build
+$ git clone https://github.com/wenzi0github/npm-webpack-ts.git ./gh-qqnews-report
 ```
 
-### 测试
-
-并且集成了 jest 框架的测试功能，执行以下的命令即可：
+安装相应的 npm 包：
 
 ```shell
-npm run test
+$ cd ./gh-qqnews-report
+$ npm install --save-dev
 ```
 
-### 格式化
+针对已经开发好的 npm 包，要介绍给用户时，可以这样介绍，我们以`gh-qqnews-report`包为例，要介绍怎么样下载，是否有 cdn 的地址：
 
-这里使用 prettier 进行格式化操作，并配合 tslint 进行格式化的检查。
+使用 npm:
 
-### 规范提交信息
+```shell
+$ npm install gh-qqnews-report
+```
 
-采用 husky + commitlint 规范 git 的提交信息。
+使用 bower:
+
+```shell
+$ bower install gh-qqnews-report
+```
+
+使用 yarn:
+
+```shell
+$ yarn add gh-qqnews-report
+```
+
+使用 jsDelivr 的 CDN 地址:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/gh-qqnews-report"></script>
+```
+
+使用 unpkg 的 CDN 地址:
+
+```html
+<script src="https://unpkg.com/gh-qqnews-report></script>
+```
+
+### 使用方式(Usage)
+
+这里要提供先直接用一个简单的例子，介绍如何使用。
+
+```javascript
+const report = new Report({
+    actid: 56, // 每个项目的actid均不相同，请向产品经理确认
+});
+report.send({
+    pagename: "mainpage",
+    event_id: "pv",
+});
+```
+
+### 样例(example)
+
+更多详细的使用方法介绍。
+
+### 维护者(Maintainers)
+
+[wenzi0github](https://github.com/wenzi0github)
+
+### 贡献者(Contributing)
+
+无
+
+### 协议(License)
+
+[MIT](./LICENSE)
