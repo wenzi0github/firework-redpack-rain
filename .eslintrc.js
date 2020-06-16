@@ -7,23 +7,16 @@ module.exports = {
         //指定代码的运行环境
         browser: true,
         node: true,
+        es6: true,
     },
-    // extends: ["plugin:prettier/recommended"],
-    // env: {
-    //     browser: true,
-    //     node: true,
-    //     es6: true,
-    // },
-    // parser: "typescript-eslint-parser",
-    // parserOptions: {
-    //     ecmaVersion: 2017,
-    //     ecmaFeatures: {
-    //         legacyDecorators: true,
-    //         experimentalObjectRestSpread: true,
-    //     },
-    //     sourceType: "module",
-    // },
-    // plugins: ["html", "vue", "typescript"],
+    parserOptions: {
+        ecmaVersion: 2020,
+        ecmaFeatures: {
+            legacyDecorators: true,
+            experimentalObjectRestSpread: true,
+        },
+        sourceType: "module",
+    },
     rules: {
         eqeqeq: [
             "error",
@@ -43,7 +36,7 @@ module.exports = {
         // allow debugger during development
         "no-mixed-spaces-and-tabs": "off",
         semi: ["error", "always"],
-        "indent": [true, "spaces", 4],
+        indent: [2, "spaces", 4],
         "no-tabs": "off",
         "one-var": "off",
         "one-var-declaration-per-line": ["error", "initializations"],
