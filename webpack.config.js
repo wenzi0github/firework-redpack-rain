@@ -1,5 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 const packageConfig = require("./package");
 
@@ -31,6 +32,7 @@ module.exports = {
         ],
     },
     plugins: [
+        new CleanWebpackPlugin(),
         new webpack.BannerPlugin(
             `User v${
                 packageConfig.version
