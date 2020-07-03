@@ -1,7 +1,8 @@
 const path = require("path");
-const webpack = require('webpack');
+const webpack = require("webpack");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
-const packageConfig = require( './package' );
+const packageConfig = require("./package");
 
 // https://webpack.docschina.org/configuration
 module.exports = {
@@ -15,6 +16,7 @@ module.exports = {
         libraryExport: "default",
         library: "User",
         libraryTarget: "umd",
+        globalObject: "this",
     },
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
@@ -29,5 +31,12 @@ module.exports = {
             },
         ],
     },
-    plugins: [new webpack.BannerPlugin(`User v${packageConfig.version}\nlast update: ${new Date().toLocaleString()}\nauthor: skeetershi`)],
+    plugins: [
+        new CleanWebpackPlugin(),
+        new webpack.BannerPlugin(
+            `User v${
+                packageConfig.version
+            }\nlast update: ${new Date().toLocaleString()}\nauthor: skeetershi`
+        ),
+    ],
 };
