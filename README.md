@@ -61,7 +61,7 @@ $ yarn add gh-qqnews-report
 使用 unpkg 的 CDN 地址:
 
 ```html
-<script src="https://unpkg.com/gh-qqnews-report></script>
+<script src="https://unpkg.com/gh-qqnews-report"></script>
 ```
 
 ### 使用方式(Usage)
