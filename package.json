@@ -4,11 +4,13 @@
     "description": "",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "repository": "https://github.com/wenzi0github/npm-webpack-ts.git",
     "files": [
         "dist"
     ],
     "scripts": {
         "test": "jest",
+        "eslint": "./node_modules/.bin/eslint --fix src/**/*.ts",
         "build": "webpack -p --config webpack.config.js"
     },
     "author": "",
@@ -33,7 +35,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "lint-staged",
+            "pre-commit": "npm run eslint && lint-staged && npm run test",
             "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
         }
     },
