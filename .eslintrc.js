@@ -29,7 +29,6 @@ module.exports = {
         "no-undef": "off",
         "no-unused-vars": "error",
         "no-use-before-define": "error",
-        "no-unused-vars": "error",
         "generator-star-spacing": "off",
         // allow debugger during development
         "no-mixed-spaces-and-tabs": "off",

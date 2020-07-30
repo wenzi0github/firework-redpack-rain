@@ -1,6 +1,6 @@
 # 使用 typescript 开发 npm 包的配置模板
 
-### 背景介绍(Background)
+## 背景介绍(Background)
 
 [![version](https://img.shields.io/npm/v/gh-qqnews-report?color=brightgreen&style=flat-square)](https://www.npmjs.com/package/gh-qqnews-report)
 ![size](https://img.shields.io/bundlephobia/min/gh-qqnews-report)
@@ -15,11 +15,11 @@
 -   使用 prettier 进行格式化操作，并配合 tslint 进行格式化的检查
 -   采用 husky + commitlint 规范 git 的提交信息
 
-### 安装(Install)
+## 使用
 
 本模板的安装是从 git 仓库 clone 下来，然后安装 npm 包后，即可进行开发，开箱即用。
 
-下载：
+### 下载：
 
 ```shell
 $ git clone https://github.com/wenzi0github/npm-webpack-ts.git ./gh-qqnews-report
@@ -32,7 +32,29 @@ $ cd ./gh-qqnews-report
 $ npm install --save-dev
 ```
 
-针对已经开发好的 npm 包，要介绍给用户时，可以这样介绍，我们以`gh-qqnews-report`包为例，要介绍怎么样下载，是否有 cdn 的地址：
+### 修改 package.json
+
+这里要修改配置文件中的信息了：
+
+```json
+{
+    "name": "your project name", // 修改为自己项目的英文名
+    "version": "0.0.1", // 版本号，建议从0.0.1开始
+    "description": "这是一个干什么的仓库", // 描述
+    "main": "dist/index.js", // 入口文件是哪个
+    "types": "dist/index.d.ts", // typescript的定义入口文件
+    "repository": "https://github.com/wenzi0github/npm-webpack-ts.git", // 自己仓库的地址
+    "files": ["dist"] // 要把哪些文件发布到npm上
+}
+```
+
+## readme 模板
+
+你可以按照以下的格式介绍你的仓库的功能。
+
+### 安装(Install)
+
+针对已经开发好的 npm 包，要介绍给用户时，可以这样介绍，我们以`gh-qqnews-report`包为例：
 
 使用 npm:
 
