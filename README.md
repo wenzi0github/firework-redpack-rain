@@ -11,9 +11,9 @@
 
 这里的徽章标签可以去 [https://img.shields.io](https://img.shields.io) 生成。
 
--   集成了 jest 的测试框架，可以直接在**\_\_tests\_\_**的目录编写测试样例。
--   使用 prettier 进行格式化操作，并配合 tslint 进行格式化的检查
--   采用 husky + commitlint 规范 git 的提交信息
+- 集成了 jest 的测试框架，可以直接在**\_\_tests\_\_**的目录编写测试样例。
+- 使用 prettier 进行格式化操作，并配合 tslint 进行格式化的检查
+- 采用 husky + commitlint 规范 git 的提交信息
 
 ## 使用
 
@@ -38,13 +38,13 @@ $ npm install --save-dev
 
 ```json
 {
-    "name": "your project name", // 修改为自己项目的英文名
-    "version": "0.0.1", // 版本号，建议从0.0.1开始
-    "description": "这是一个干什么的仓库", // 描述
-    "main": "dist/index.js", // 入口文件是哪个
-    "types": "dist/index.d.ts", // typescript的定义入口文件
-    "repository": "https://github.com/wenzi0github/npm-webpack-ts.git", // 自己仓库的地址
-    "files": ["dist"] // 要把哪些文件发布到npm上
+  "name": "your project name", // 修改为自己项目的英文名
+  "version": "0.0.1", // 版本号，建议从0.0.1开始
+  "description": "这是一个干什么的仓库", // 描述
+  "main": "dist/index.js", // 入口文件是哪个
+  "types": "dist/index.d.ts", // typescript的定义入口文件
+  "repository": "https://github.com/wenzi0github/npm-webpack-ts.git", // 自己仓库的地址
+  "files": ["dist"] // 要把哪些文件发布到npm上
 }
 ```
 
@@ -92,11 +92,11 @@ $ yarn add gh-qqnews-report
 
 ```javascript
 const report = new Report({
-    actid: 56, // 每个项目的actid均不相同，请向产品经理确认
+  actid: 56, // 每个项目的actid均不相同，请向产品经理确认
 });
 report.send({
-    pagename: "mainpage",
-    event_id: "pv",
+  pagename: "mainpage",
+  event_id: "pv",
 });
 ```
 

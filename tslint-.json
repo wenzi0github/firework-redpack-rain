@@ -1,14 +1,23 @@
 {
     "defaultSeverity": "warning",
     "linterOptions": {
-        "exclude": ["node_modules/**"]
+        "exclude": [
+            "node_modules/**"
+        ]
     },
     "rules": {
-        "align": [false, "parameters", "statements"],
+        "align": [
+            false,
+            "parameters",
+            "statements"
+        ],
         "max-line-length": false,
         "no-var-keyword": true,
         "trailing-comma": false,
-        "quotemark": [true, "single"],
+        "quotemark": [
+            true,
+            "single"
+        ],
         "interface-name": false,
         "ordered-imports": false,
         "object-literal-sort-keys": false,
