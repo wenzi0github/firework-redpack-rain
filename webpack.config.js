@@ -39,7 +39,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new webpack.BannerPlugin(
-      `v${packageConfig.version}\n update: ${new Date().toLocaleString()}`
+      `v${packageConfig.version} update: ${new Date().toLocaleString()}`
     ),
   ],
 };
