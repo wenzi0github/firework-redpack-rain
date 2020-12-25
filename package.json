@@ -1,10 +1,10 @@
 {
-  "name": "webpack-ts",
+  "name": "@tencent/firework-redpack-rain",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "repository": "https://github.com/wenzi0github/npm-webpack-ts.git",
+  "repository": "git@git.code.oa.com:news-gh-team/firework-redpack-rain.git",
   "files": [
     "dist"
   ],
