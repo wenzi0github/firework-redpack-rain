@@ -5,6 +5,8 @@ module.exports = {
   // useTabs: true,
   // 使用分号, 默认true
   semi: true,
+  singleQuote: true,
+  trailingComma: 'all',
   // 对象中的空格 默认true
   // true: { foo: bar }
   // false: {foo: bar}

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
@@ -16,7 +15,7 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].js",
     libraryExport: "default",
-    library: "User",
+    library: "RedpackRain",
     libraryTarget: "umd",
     globalObject: "this",
   },
