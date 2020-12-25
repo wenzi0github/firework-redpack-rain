@@ -2,16 +2,17 @@
 interface RedpackRainItem {
   speedMin: number;
   speedMax: number;
-  imgUrl: string;
+  imgUrl: string[];
   width: number;
   height: number;
 }
 
-interface BubbleProps {
+export interface BubbleProps {
   imgUrl: string;
   width: number;
   height: number;
   speed: number;
+  opacitySpeed: number;
 }
 
 interface RedpackRainProps {
@@ -24,19 +25,23 @@ interface RedpackRainProps {
 
 const defaultsConfig: RedpackRainProps = {
   selector: document.body,
-  interval: 2000,
+  interval: 1600,
   redpack: {
-    speedMin: 80,
-    speedMax: 100,
-    imgUrl: 'https://sola.gtimg.cn/aoi/sola/20201225104146_Re9xFvzIuc.png',
-    width: 80,
-    height: 100,
+    speedMin: 10,
+    speedMax: 10,
+    imgUrl: [
+      'https://sola.gtimg.cn/aoi/sola/20201225104146_Re9xFvzIuc.png',
+      'https://sola.gtimg.cn/aoi/sola/20201214112804_3fZjO9VCOV.png',
+    ],
+    width: 192,
+    height: 216,
   },
   bubble: {
     imgUrl: 'https://sola.gtimg.cn/aoi/sola/20201225103914_2QQ9bXg2rU.png',
-    width: 30,
-    height: 15,
-    speed: 2,
+    width: 156,
+    height: 111,
+    speed: 5,
+    opacitySpeed: 0.04,
   },
   onClick: () => {
     /* isHit */

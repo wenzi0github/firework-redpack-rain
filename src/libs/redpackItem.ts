@@ -2,6 +2,7 @@ import {
   cancelAnimationFramePolyfill,
   requestAnimationFramePolyfill,
 } from '../utils/animationFrame';
+import { BubbleProps } from '../config/defaults';
 
 interface RedpackItemProps {
   redpackId: number; // 红包标识
@@ -14,6 +15,7 @@ interface RedpackItemProps {
   height: number;
   speedMin: number;
   speedMax: number;
+  bubble: BubbleProps;
   containerHeight: number;
   onDestoryed: (id: number) => void;
 }
@@ -28,6 +30,7 @@ class RedpackItem {
   bubbleCtx: CanvasRenderingContext2D | null = null;
   width = 0;
   height = 0;
+  bubbleConfig: BubbleProps | null = null;
   redpackImgUrl = '';
   redpackImg: HTMLImageElement | null = null;
   containerHeight = 0;
@@ -44,6 +47,7 @@ class RedpackItem {
     height,
     speedMax,
     speedMin,
+    bubble,
     containerHeight,
     onDestoryed,
   }: RedpackItemProps) {
@@ -58,6 +62,7 @@ class RedpackItem {
     this.redpackImgUrl = redpackImgUrl;
     this.containerHeight = containerHeight;
     this.onDestoryed = onDestoryed;
+    this.bubbleConfig = bubble;
   }
 
   async start() {
@@ -150,11 +155,10 @@ class RedpackItem {
 
   // 添加气泡
   async addBubble() {
-    if (!this.bubbleCtx) {
+    if (!this.bubbleCtx || !this.bubbleConfig) {
       return;
     }
-    const imgUrl =
-      'https://sola.gtimg.cn/aoi/sola/20201225103914_2QQ9bXg2rU.png';
+    const { imgUrl, width, height, opacitySpeed, speed } = this.bubbleConfig;
     const bubbleImg = await this.loadImage(imgUrl);
 
     const nextx = this.x;
@@ -162,18 +166,18 @@ class RedpackItem {
 
     let alpha = 1;
     const bbs = () => {
-      alpha -= 0.04;
+      alpha -= opacitySpeed;
       if (!this.bubbleCtx) {
         return;
       }
-      this.bubbleCtx.clearRect(nextx, nexty, 90, 61);
+      this.bubbleCtx.clearRect(nextx, nexty, width, height);
 
       if (alpha > 0) {
         this.bubbleCtx.save();
         this.bubbleCtx.globalAlpha = alpha;
 
-        nexty -= 2;
-        this.bubbleCtx.drawImage(bubbleImg, nextx, nexty, 90, 61);
+        nexty -= speed;
+        this.bubbleCtx.drawImage(bubbleImg, nextx, nexty, width, height);
         this.bubbleCtx.restore();
         requestAnimationFramePolyfill(bbs);
       }

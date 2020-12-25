@@ -5,7 +5,7 @@ import RedpackItem from './libs/redpackItem';
 interface RedpackRainItem {
   speedMin?: number;
   speedMax?: number;
-  imgUrl?: string;
+  imgUrl?: string[];
   width?: number;
   height?: number;
 }
@@ -15,11 +15,12 @@ interface BubbleProps {
   width?: number;
   height?: number;
   speed?: number;
+  opacitySpeed?: number;
 }
 
 interface RedpackRainProps {
   selector: HTMLElement | string;
-  interval: number;
+  interval?: number;
   redpack?: RedpackRainItem;
   bubble?: BubbleProps;
   onClick?: (isHit: boolean) => void;
@@ -32,7 +33,7 @@ class RedpackRain {
   private config = defaultsConfig;
   private parentClientRect = { width: 0, height: 0, top: 0, left: 0 };
   private ratio = 3;
-  redpackItemList: {
+  private redpackItemList: {
     [key: number]: RedpackItem;
   } = {};
 
@@ -127,11 +128,12 @@ class RedpackRain {
       bubbleCtx: this.bubbleCtx,
       x: Math.random() * (this.parentClientRect.width - width * 2) + width, // 避免红包产生在边界
       y: -this.config.redpack.height,
-      redpackImgUrl: imgUrl,
+      redpackImgUrl: imgUrl[Math.floor(Math.random() * imgUrl.length)],
       width,
       height,
       speedMax,
       speedMin,
+      bubble: this.config.bubble,
       containerHeight: this.parentClientRect.height,
       onDestoryed: (id) => {
         delete this.redpackItemList[id];
