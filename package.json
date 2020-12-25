@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "repository": "git@git.code.oa.com:news-gh-team/firework-redpack-rain.git",
+  "repository": "https://github.com/wenzi0github/npm-webpack-ts.git",
   "files": [
     "dist"
   ],
