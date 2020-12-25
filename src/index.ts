@@ -181,6 +181,11 @@ class RedpackRain {
       clearInterval(this.timer);
       this.timer = null;
     }
+    for (const key in this.redpackItemList) {
+      const redpackItem = this.redpackItemList[key];
+
+      redpackItem.clear();
+    }
     this.config.selector.removeEventListener('click', this.clickListener);
   }
 }
