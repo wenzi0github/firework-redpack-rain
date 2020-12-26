@@ -1,5 +1,9 @@
 import defaultsConfig from './config/defaults';
 import RedpackItem from './libs/redpackItem';
+import {
+  requestAnimationFramePolyfill,
+  cancelAnimationFramePolyfill,
+} from './utils/animationFrame';
 
 // 每个红包的配置
 interface RedpackRainItem {
@@ -18,12 +22,17 @@ interface BubbleProps {
   opacitySpeed?: number;
 }
 
+interface MonitorProps {
+  fps: number;
+}
+
 interface RedpackRainProps {
   selector: HTMLElement | string;
   interval?: number;
   redpack?: RedpackRainItem;
   bubble?: BubbleProps;
   onClick?: (isHit: boolean) => void;
+  onMonitor?: (props: MonitorProps) => void;
 }
 
 class RedpackRain {
@@ -36,6 +45,7 @@ class RedpackRain {
   private redpackItemList: {
     [key: number]: RedpackItem;
   } = {};
+  private requestId: number | null = null;
 
   constructor(props: RedpackRainProps) {
     this.createConfig(props);
@@ -146,10 +156,14 @@ class RedpackRain {
   private clickListener = (event: MouseEvent) => {
     const { clientX, clientY } = event;
     const { left, top } = this.parentClientRect;
+
+    if (this.requestId) {
+      cancelAnimationFramePolyfill(this.requestId);
+    }
     for (const key in this.redpackItemList) {
       const redpackItem = this.redpackItemList[key];
 
-      redpackItem.run(
+      redpackItem.render(
         (clientX - left) * this.ratio,
         (clientY - top) * this.ratio,
         ({ redpackId, isPointInPath }) => {
@@ -162,7 +176,32 @@ class RedpackRain {
         },
       );
     }
+    this.render();
   };
+
+  private fpsBefore = Date.now();
+  private render() {
+    this.requestId = requestAnimationFramePolyfill(() => {
+      this.rainCtx?.clearRect(
+        0,
+        0,
+        this.parentClientRect.width,
+        this.parentClientRect.height,
+      );
+      for (const key in this.redpackItemList) {
+        const redpackItem = this.redpackItemList[key];
+
+        redpackItem.render();
+      }
+      const now = Date.now();
+      const fps = Math.round(1000 / (now - this.fpsBefore));
+      this.fpsBefore = now;
+      if (typeof this.config.onMonitor === 'function') {
+        this.config.onMonitor({ fps });
+      }
+      this.render();
+    });
+  }
 
   start() {
     // 先停止上一个
@@ -171,21 +210,35 @@ class RedpackRain {
 
     this.createRedpackItem();
 
-    // 启动一个新的红包雨
+    // 创建一个新的红包雨
     this.timer = setInterval(() => {
+      if (document.visibilityState === 'hidden' || document.hidden) {
+        return;
+      }
       this.createRedpackItem();
     }, this.config.interval);
+    this.render();
   }
   stop() {
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
     }
-    for (const key in this.redpackItemList) {
-      const redpackItem = this.redpackItemList[key];
+    // for (const key in this.redpackItemList) {
+    //   const redpackItem = this.redpackItemList[key];
 
-      redpackItem.stop();
+    //   redpackItem.stop();
+    // }
+    if (this.requestId) {
+      cancelAnimationFramePolyfill(this.requestId);
+      this.requestId = null;
     }
+    this.rainCtx?.clearRect(
+      0,
+      0,
+      this.parentClientRect.width,
+      this.parentClientRect.height,
+    );
     this.config.selector.removeEventListener('click', this.clickListener);
   }
 }

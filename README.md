@@ -76,6 +76,7 @@ function App() {
 | selector            | 是       | string \| HTMLElement        |        | 要渲染红包雨的容器<br/>可以是选择器也可以是 dom 元素 |
 | interval            | 否       | number                       | 1600   | 下红包雨的间隔，单位毫秒                             |
 | onClick             |          | function(isHited: boolean){} | 空     | 整个红包雨区域的点击，isHited 表示是否命中红包       |
+| onMonitor           |          | function({fps}){}            | 空     | 红包雨的 fps 监控                                    |
 | redpack             | 否       |                              |        | 红包配置                                             |
 | redpack.speedMin    | 否       | number                       | 10     | 红包下降速度的最小值                                 |
 | redpack.speedMax    | 否       | number                       | 10     | 红包下降速度的最大值                                 |
@@ -112,5 +113,8 @@ const rain = new RedpackRain({
   onClick: (isHited) => {
     console.log(isHited);
   },
+  onMonitor(monitors) {
+    console.log(monitors);
+  }
 });
 ```

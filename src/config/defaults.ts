@@ -15,12 +15,17 @@ export interface BubbleProps {
   opacitySpeed: number;
 }
 
+interface MonitorProps {
+  fps: number;
+}
+
 interface RedpackRainProps {
   selector: HTMLElement;
   interval: number;
   redpack: RedpackRainItem;
   bubble: BubbleProps;
   onClick?: (isHit: boolean) => void;
+  onMonitor?: (props: MonitorProps) => void;
 }
 
 const defaultsConfig: RedpackRainProps = {
