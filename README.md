@@ -79,7 +79,7 @@ function App() {
 | redpack             | 否       |                              |        | 红包配置                                             |
 | redpack.speedMin    | 否       | number                       | 10     | 红包下降速度的最小值                                 |
 | redpack.speedMax    | 否       | number                       | 10     | 红包下降速度的最大值                                 |
-| redpack.imgUrl      | 否       | string[]                     | []     | 红包的图片                                           |
+| redpack.imgUrl      | 否       | string                       |        | 红包的图片                                           |
 | redpack.width       |          | number                       | 192    | 红包的宽度                                           |
 | redpack.height      |          | number                       | 216    | 红包的高度                                           |
 | bubble              |          |                              |        | 命中红包后的上升气泡的配置                           |
@@ -98,12 +98,9 @@ const rain = new RedpackRain({
   redpack: {
     speedMin: 10,
     speedMax: 10,
-    imgUrl: [
-      'https://sola.gtimg.cn/aoi/sola/20201225104146_Re9xFvzIuc.png',
-      'https://sola.gtimg.cn/aoi/sola/20201214112804_3fZjO9VCOV.png',
-    ],
-    width: 192,
-    height: 216,
+    imgUrl: 'https://sola.gtimg.cn/aoi/sola/20201226100322_I1ltnkzJVc.png',
+    width: 126,
+    height: 174,
   },
   bubble: {
     imgUrl: 'https://sola.gtimg.cn/aoi/sola/20201225103914_2QQ9bXg2rU.png',

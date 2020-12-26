@@ -2,7 +2,7 @@
 interface RedpackRainItem {
   speedMin: number;
   speedMax: number;
-  imgUrl: string[];
+  imgUrl: string;
   width: number;
   height: number;
 }
@@ -29,12 +29,9 @@ const defaultsConfig: RedpackRainProps = {
   redpack: {
     speedMin: 10,
     speedMax: 10,
-    imgUrl: [
-      'https://sola.gtimg.cn/aoi/sola/20201225104146_Re9xFvzIuc.png',
-      'https://sola.gtimg.cn/aoi/sola/20201214112804_3fZjO9VCOV.png',
-    ],
-    width: 192,
-    height: 216,
+    imgUrl: 'https://sola.gtimg.cn/aoi/sola/20201226100322_I1ltnkzJVc.png',
+    width: 126,
+    height: 174,
   },
   bubble: {
     imgUrl: 'https://sola.gtimg.cn/aoi/sola/20201225103914_2QQ9bXg2rU.png',

@@ -35,6 +35,8 @@ class RedpackItem {
   redpackImg: HTMLImageElement | null = null;
   containerHeight = 0;
   onDestoryed: ((id: number) => void) | null = null;
+  angle = 0;
+  ratio = 1;
 
   constructor({
     redpackId,
@@ -63,6 +65,11 @@ class RedpackItem {
     this.containerHeight = containerHeight;
     this.onDestoryed = onDestoryed;
     this.bubbleConfig = bubble;
+
+    const random = Math.random();
+    const angle = ((random * 30 + 10) * Math.PI) / 180;
+    this.angle = random < 0.5 ? angle : 0 - angle;
+    this.ratio = random * 0.4 + 0.6;
   }
 
   async start() {
@@ -100,37 +107,40 @@ class RedpackItem {
       // isPointInPath只能检测最后一个添加到画布上的元素，因此会将当前元素先删了
       // 然后再追加到画布里，再检测点击区域
       this.clear();
+      this.stop();
     }
     this.requestId = requestAnimationFramePolyfill(() => {
-      if (!this.redpackCtx || !this.redpackImg) {
+      const { redpackCtx } = this;
+      if (!redpackCtx || !this.redpackImg) {
         return;
       }
 
       // 先清除当前位置
-      this.redpackCtx.clearRect(
-        this.x - 3,
-        this.y - 3,
-        this.width + 6,
-        this.height + 6,
-      );
+      this.clear();
       if (this.y < this.containerHeight) {
         // 绘制下一个位置
         const nextx = this.x;
         const nexty = this.y + this.speed;
-        this.redpackCtx.beginPath();
-        this.redpackCtx.rect(nextx, nexty, this.width, this.height);
-        this.redpackCtx.drawImage(
+
+        redpackCtx.save();
+        redpackCtx.beginPath();
+        redpackCtx.rect(nextx, nexty, this.width, this.height);
+        redpackCtx.translate(nextx + this.width / 2, nexty + this.height / 2);
+        redpackCtx.rotate(this.angle);
+        redpackCtx.scale(this.ratio, this.ratio);
+        redpackCtx.drawImage(
           this.redpackImg,
-          nextx,
-          nexty,
+          -this.width / 2,
+          -this.height / 2,
           this.width,
           this.height,
         );
-        this.redpackCtx.strokeStyle = 'transparent';
-        this.redpackCtx.stroke();
+        redpackCtx.strokeStyle = 'transparent';
+        redpackCtx.stroke();
+        redpackCtx.restore();
         this.y = nexty;
 
-        const isPointInPath = this.redpackCtx.isPointInPath(clientX, clientY);
+        const isPointInPath = redpackCtx.isPointInPath(clientX, clientY);
         if (typeof callback === 'function' && clientX > -1 && clientY > -1) {
           callback({
             redpackId: this.redpackId,
@@ -187,13 +197,32 @@ class RedpackItem {
   }
 
   clear() {
+    const ss = 4;
+
+    const { redpackCtx } = this;
+    if (redpackCtx) {
+      redpackCtx.clearRect(
+        this.x - ss,
+        this.y - ss,
+        this.width + ss * 2,
+        this.height + ss * 2,
+      );
+      redpackCtx.save();
+      redpackCtx.translate(this.x + this.width / 2, this.y + this.height / 2);
+      redpackCtx.rotate(this.angle);
+      redpackCtx.clearRect(
+        -this.width / 2 - ss,
+        -this.height / 2 - ss,
+        this.width + ss * 2,
+        this.height + ss * 2,
+      );
+      redpackCtx.restore();
+    }
+  }
+
+  stop() {
+    this.clear();
     cancelAnimationFramePolyfill(this.requestId);
-    this.redpackCtx?.clearRect(
-      this.x - 3,
-      this.y - 3,
-      this.width + 6,
-      this.height + 6,
-    );
   }
 }
 export default RedpackItem;

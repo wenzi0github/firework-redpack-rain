@@ -5,7 +5,7 @@ import RedpackItem from './libs/redpackItem';
 interface RedpackRainItem {
   speedMin?: number;
   speedMax?: number;
-  imgUrl?: string[];
+  imgUrl?: string;
   width?: number;
   height?: number;
 }
@@ -128,7 +128,7 @@ class RedpackRain {
       bubbleCtx: this.bubbleCtx,
       x: Math.random() * (this.parentClientRect.width - width * 2) + width, // 避免红包产生在边界
       y: -this.config.redpack.height,
-      redpackImgUrl: imgUrl[Math.floor(Math.random() * imgUrl.length)],
+      redpackImgUrl: imgUrl,
       width,
       height,
       speedMax,
@@ -184,7 +184,7 @@ class RedpackRain {
     for (const key in this.redpackItemList) {
       const redpackItem = this.redpackItemList[key];
 
-      redpackItem.clear();
+      redpackItem.stop();
     }
     this.config.selector.removeEventListener('click', this.clickListener);
   }
