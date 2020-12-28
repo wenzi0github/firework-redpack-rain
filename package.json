@@ -1,6 +1,6 @@
 {
   "name": "@tencent/firework-redpack-rain",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "烟花活动的红包雨",
   "keywords": [
     "烟花活动",
@@ -49,6 +49,6 @@
     ]
   },
   "dependencies": {
-    "gh-qqnews-utils": "0.0.14"
+    "gh-qqnews-utils": "0.0.15"
   }
 }
