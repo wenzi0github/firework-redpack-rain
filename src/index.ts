@@ -4,6 +4,7 @@ import {
   requestAnimationFramePolyfill,
   cancelAnimationFramePolyfill,
 } from './utils/animationFrame';
+import Visibility from 'gh-qqnews-utils/visibility';
 
 // 每个红包的配置
 interface RedpackRainItem {
@@ -46,6 +47,9 @@ class RedpackRain {
     [key: number]: RedpackItem;
   } = {};
   private requestId: number | null = null;
+  private fpsBefore = Date.now(); // 计算fps
+  private lastRedpackX = 0; // 上个红包的横坐标
+  private pageVisibility: Visibility | null = null;
 
   constructor(props: RedpackRainProps) {
     this.createConfig(props);
@@ -61,11 +65,13 @@ class RedpackRain {
       this.config.selector = props.selector;
     }
     this.creatCanvas();
+    this.pageVisibility = new Visibility();
   }
 
   // 手动配置覆盖掉默认配置
   private createConfig(config: any, parentKey = '') {
-    for (let key in config) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const key in config) {
       const item = config[key];
 
       if (item) {
@@ -96,13 +102,15 @@ class RedpackRain {
     if (selector.getElementsByTagName('canvas').length === 0) {
       const canvasBubble = document.createElement('canvas');
       canvasBubble.className = 'bubble-redpack-canvas';
-      canvasBubble.style.cssText = `position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1`;
+      canvasBubble.style.cssText =
+        'position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1';
       canvasBubble.width = this.parentClientRect.width;
       canvasBubble.height = this.parentClientRect.height;
 
       const canvasRain = document.createElement('canvas');
       canvasRain.className = 'rain-redpack-canvas';
-      canvasRain.style.cssText = `position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2`;
+      canvasRain.style.cssText =
+        'position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2';
       canvasRain.width = this.parentClientRect.width;
       canvasRain.height = this.parentClientRect.height;
 
@@ -114,13 +122,34 @@ class RedpackRain {
 
       selector.appendChild(div);
 
-      this.rainCtx = (selector.querySelector(
+      const rainCanvasSelector: HTMLCanvasElement | null = selector.querySelector(
         '.rain-redpack-canvas',
-      ) as HTMLCanvasElement).getContext('2d');
-      this.bubbleCtx = (selector.querySelector(
+      );
+      const bubbleCanvasSelector: HTMLCanvasElement | null = selector.querySelector(
         '.bubble-redpack-canvas',
-      ) as HTMLCanvasElement).getContext('2d');
+      );
+
+      if (rainCanvasSelector && bubbleCanvasSelector) {
+        this.rainCtx = rainCanvasSelector.getContext('2d');
+        this.bubbleCtx = bubbleCanvasSelector.getContext('2d');
+      }
     }
+  }
+
+  /**
+   * 返回红包创建时的x轴坐标
+   * @param width 红包的宽度
+   */
+  private getRedpackItemX(width: number): number {
+    let x = this.lastRedpackX;
+    do {
+      x = Math.floor(
+        Math.random() * (this.parentClientRect.width - width * 2) + width,
+      ); // 避免红包产生在边界
+    } while (Math.abs(this.lastRedpackX - x) <= width * 1.5); // 避免先后两个红包重叠
+
+    this.lastRedpackX = x;
+    return x;
   }
 
   // 创建红包
@@ -132,11 +161,12 @@ class RedpackRain {
     const { width, height, speedMax, speedMin, imgUrl } =
       this.config.redpack || {};
     const redpackItemId = Date.now();
+    const x = this.getRedpackItemX(width);
     const redpackItem = new RedpackItem({
       redpackId: redpackItemId,
       redpackCtx: this.rainCtx,
       bubbleCtx: this.bubbleCtx,
-      x: Math.random() * (this.parentClientRect.width - width * 2) + width, // 避免红包产生在边界
+      x,
       y: -this.config.redpack.height,
       redpackImgUrl: imgUrl,
       width,
@@ -160,6 +190,7 @@ class RedpackRain {
     if (this.requestId) {
       cancelAnimationFramePolyfill(this.requestId);
     }
+    // eslint-disable-next-line no-restricted-syntax
     for (const key in this.redpackItemList) {
       const redpackItem = this.redpackItemList[key];
 
@@ -179,7 +210,6 @@ class RedpackRain {
     this.render();
   };
 
-  private fpsBefore = Date.now();
   private render() {
     this.requestId = requestAnimationFramePolyfill(() => {
       this.rainCtx?.clearRect(
@@ -188,6 +218,7 @@ class RedpackRain {
         this.parentClientRect.width,
         this.parentClientRect.height,
       );
+      // eslint-disable-next-line no-restricted-syntax
       for (const key in this.redpackItemList) {
         const redpackItem = this.redpackItemList[key];
 
@@ -203,6 +234,7 @@ class RedpackRain {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   start() {
     // 先停止上一个
     this.stop();
@@ -218,17 +250,28 @@ class RedpackRain {
       this.createRedpackItem();
     }, this.config.interval);
     this.render();
+
+    this.pageVisibility?.visibilityChange((isShow) => {
+      if (isShow) {
+        // 创建一个新的红包雨
+        this.timer = setInterval(() => {
+          this.createRedpackItem();
+        }, this.config.interval);
+      } else {
+        if (this.timer) {
+          clearInterval(this.timer);
+          this.timer = null;
+        }
+      }
+    });
   }
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   stop() {
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
     }
-    // for (const key in this.redpackItemList) {
-    //   const redpackItem = this.redpackItemList[key];
-
-    //   redpackItem.stop();
-    // }
     if (this.requestId) {
       cancelAnimationFramePolyfill(this.requestId);
       this.requestId = null;
@@ -240,6 +283,8 @@ class RedpackRain {
       this.parentClientRect.height,
     );
     this.config.selector.removeEventListener('click', this.clickListener);
+
+    this.pageVisibility?.destory();
   }
 }
 export default RedpackRain;

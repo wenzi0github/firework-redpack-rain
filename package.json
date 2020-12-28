@@ -1,7 +1,11 @@
 {
   "name": "@tencent/firework-redpack-rain",
-  "version": "1.0.2",
-  "description": "",
+  "version": "1.0.3",
+  "description": "烟花活动的红包雨",
+  "keywords": [
+    "烟花活动",
+    "红包雨"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "http://git.code.oa.com/news-gh-team/firework-redpack-rain.git",
@@ -44,5 +48,8 @@
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "gh-qqnews-utils": "0.0.14"
   }
 }
