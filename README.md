@@ -38,6 +38,8 @@ function App() {
     });
     rainRef.current = rain;
     rain.start();
+
+    return () => rain.stop();
   }, []);
 
   const handleStopClick = () => {
@@ -57,7 +59,7 @@ function App() {
 
 ## 实例方法说明
 
-实例只有 2 个方法。
+实例有 3 个方法。
 
 ### start
 
@@ -66,6 +68,27 @@ function App() {
 ### stop
 
 调用`stop()`方法后，即停止下红包雨，并清空 canvas 面板。
+
+### setOptions
+
+可以在下红包雨的过程中，修改配置，需要注意的是：
+
+1. 该方法需要在 start()之后和 stop()之前才能调用，即在下红包雨的过程中才有效；
+2. 新的配置只会对后续新产生的的红包有影响，之前已产生红包依然使用之前的配置；
+
+输入的参数与初始化时的参数几乎一样（除了无法设置 selector 外，其他的参数均可以重新设置）；而且，二级配置中也可以只设置部分参数；如下面的配置中，redpack 配置中有多个参数，我们可以只设置 speedMin 和 speedMax 两个参数即可。
+
+```javascript
+rain.setOptions({
+  interval: 800, // 修改红包产生的时间间隔，单位毫秒
+  redpack: {
+    speedMin: 40, // 红包下降速度的下限
+    speedMax: 40, // 红包下降速度的上限
+  },
+});
+```
+
+其他参数，可以参照下面的`参数说明`。
 
 ## 参数说明
 
@@ -115,6 +138,6 @@ const rain = new RedpackRain({
   },
   onMonitor(monitors) {
     console.log(monitors);
-  }
+  },
 });
 ```

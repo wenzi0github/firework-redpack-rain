@@ -24,14 +24,17 @@ interface MonitorProps {
   fps: number;
 }
 
-interface RedpackRainProps {
-  selector: HTMLElement | string;
+interface RedpackRainOptions {
   interval?: number;
   eventType?: 'click' | 'touchstart';
   redpack?: RedpackRainItem;
   bubble?: BubbleProps;
   onClick?: (isHit: boolean) => void;
   onMonitor?: (props: MonitorProps) => void;
+}
+
+interface RedpackRainProps extends RedpackRainOptions {
+  selector: HTMLElement | string;
 }
 
 class RedpackRain {
@@ -244,6 +247,22 @@ class RedpackRain {
       }
       this.render();
     });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  setOptions(options: RedpackRainOptions) {
+    if (!this.timer) {
+      // 若没有启动红包雨，则无法调用该方法
+      return console.error('please use start() before setOptions');
+    }
+    const beforeInterval = this.config.interval;
+    this.createConfig(options);
+
+    // 当下红包雨的间隔变化后，则重置定时器；
+    // 若间隔不变，则还是使用之前的定时器
+    if (beforeInterval !== this.config.interval) {
+      this.start();
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/member-ordering

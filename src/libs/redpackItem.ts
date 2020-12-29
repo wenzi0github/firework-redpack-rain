@@ -69,7 +69,7 @@ class RedpackItem {
     const random = Math.random();
     const angle = ((random * 30 + 10) * Math.PI) / 180;
     this.angle = random < 0.5 ? angle : 0 - angle;
-    this.ratio = random * 0.6 + 0.6;
+    this.ratio = random * 0.36 + 0.8;
   }
 
   async start() {
