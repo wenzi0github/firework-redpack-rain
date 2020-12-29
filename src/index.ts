@@ -296,17 +296,28 @@ class RedpackRain {
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   stop() {
+    // 停止产生新的红包
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
     }
+
+    // 停止渲染
     if (this.requestId) {
       cancelAnimationFramePolyfill(this.requestId);
       this.requestId = null;
     }
+
+    // 清空已存储的红包
+    this.redpackItemList = {};
+
+    // 清空面板
     this.rainCtx?.clearRect(0, 0, this.parentClientRect.width, this.parentClientRect.height);
+
+    // 解除已绑定的事件
     this.config.selector.removeEventListener(this.config.eventType, this.clickListener);
 
+    // 解除事件
     this.pageVisibility?.destory();
   }
 }

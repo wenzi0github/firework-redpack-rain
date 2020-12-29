@@ -6,6 +6,10 @@
 $ npm i @tencent/firework-redpack-rain
 ```
 
+## 样例
+
+您可以访问[http://firework-redpack-rain.pages.oa.com](http://firework-redpack-rain.pages.oa.com)，查看样例。
+
 ## 使用
 
 简要使用：
