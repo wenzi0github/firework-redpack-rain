@@ -1,3 +1,7 @@
+## 1.0.8
+
+- fix: 修复调用 setOptions 修改参数时，会产生多个 visibilityChange 事件，进而导致产生多个 setInterval；
+
 ## 1.0.7
 
 - fix: 添加一个 clear()方法，仅擦除面板，但还保留数据，便于用于修改 interval 参数；

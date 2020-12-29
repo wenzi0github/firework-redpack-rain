@@ -280,21 +280,19 @@ class RedpackRain {
     this.render();
 
     this.pageVisibility?.visibilityChange((isShow) => {
+      if (this.timer) {
+        clearInterval(this.timer);
+        this.timer = null;
+      }
       if (isShow) {
         // 创建一个新的红包雨
         this.timer = setInterval(() => {
           this.createRedpackItem();
         }, this.config.interval);
-      } else {
-        if (this.timer) {
-          clearInterval(this.timer);
-          this.timer = null;
-        }
       }
     });
   }
 
-  // 清空面板，但数据还在
   // eslint-disable-next-line @typescript-eslint/member-ordering
   clear() {
     // 停止产生新的红包
@@ -311,21 +309,20 @@ class RedpackRain {
 
     // 清空面板
     this.rainCtx?.clearRect(0, 0, this.parentClientRect.width, this.parentClientRect.height);
-  }
-
-  // 清除所有的数据和绑定的事件
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  stop() {
-    this.clear();
-
-    // 清空已存储的红包
-    this.redpackItemList = {};
 
     // 解除已绑定的事件
     this.config.selector.removeEventListener(this.config.eventType, this.clickListener);
 
     // 解除事件
     this.pageVisibility?.destory();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  stop() {
+    this.clear();
+
+    // 清空已存储的红包
+    this.redpackItemList = {};
   }
 }
 export default RedpackRain;
