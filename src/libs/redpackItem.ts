@@ -69,12 +69,12 @@ class RedpackItem {
     const random = Math.random();
     const angle = ((random * 30 + 10) * Math.PI) / 180;
     this.angle = random < 0.5 ? angle : 0 - angle;
-    this.ratio = random * 0.4 + 0.6;
+    this.ratio = random * 0.6 + 0.6;
   }
 
   async start() {
     this.redpackImg = await this.loadImage(this.redpackImgUrl);
-    this.render(-1, -1);
+    this.render();
   }
 
   // 加载图片
@@ -92,29 +92,25 @@ class RedpackItem {
     });
   }
 
-  render(
-    clientX = -1,
-    clientY = -1,
-    callback?: (props: { redpackId: number; isPointInPath: boolean }) => void,
-  ) {
+  render() {
     const { redpackCtx } = this;
     if (!redpackCtx || !this.redpackImg) {
       return;
     }
 
     // 先清除当前位置
-    this.clear();
+    // this.clear();
     if (this.y < this.containerHeight) {
       // 绘制下一个位置
       const nextx = this.x;
-      const nexty = this.y + (clientX === -1 ? this.speed : 0);
+      const nexty = this.y + this.speed;
 
       redpackCtx.save();
       redpackCtx.beginPath();
       redpackCtx.rect(nextx, nexty, this.width, this.height);
       redpackCtx.translate(nextx + this.width / 2, nexty + this.height / 2);
-      redpackCtx.rotate(this.angle);
       redpackCtx.scale(this.ratio, this.ratio);
+      redpackCtx.rotate(this.angle);
       redpackCtx.drawImage(
         this.redpackImg,
         -this.width / 2,
@@ -126,101 +122,12 @@ class RedpackItem {
       redpackCtx.stroke();
       redpackCtx.restore();
       this.y = nexty;
-
-      const isPointInPath = redpackCtx.isPointInPath(clientX, clientY);
-      if (typeof callback === 'function' && clientX > -1 && clientY > -1) {
-        callback({
-          redpackId: this.redpackId,
-          isPointInPath,
-        });
-      }
-      if (isPointInPath) {
-        // 点击命中
-        this.clear();
-        this.addBubble();
-      }
     } else {
       // 超过边界，回调改元素被销毁的事件
       if (typeof this.onDestoryed === 'function') {
         this.onDestoryed(this.redpackId);
       }
     }
-  }
-
-  /**
-   * 运动
-   * @param clientX 点击的坐标
-   * @param clientY 点击的坐标
-   * @param callback 回调
-   */
-  run(
-    clientX = -1,
-    clientY = -1,
-    callback?: (props: { redpackId: number; isPointInPath: boolean }) => void,
-  ) {
-    if (clientX > -1 && clientY > -1) {
-      // isPointInPath只能检测最后一个添加到画布上的元素，因此会将当前元素先删了
-      // 然后再追加到画布里，再检测点击区域
-      this.clear();
-      this.stop();
-    }
-    this.requestId = requestAnimationFramePolyfill(() => {
-      const { redpackCtx } = this;
-      if (!redpackCtx || !this.redpackImg) {
-        return;
-      }
-
-      // 先清除当前位置
-      this.clear();
-      if (this.y < this.containerHeight) {
-        // 绘制下一个位置
-        const nextx = this.x;
-        const nexty = this.y + this.speed;
-
-        redpackCtx.save();
-        redpackCtx.translate(nextx + this.width / 2, nexty + this.height / 2);
-        redpackCtx.rotate(this.angle);
-        redpackCtx.scale(this.ratio, this.ratio);
-        redpackCtx.beginPath();
-        redpackCtx.rect(
-          -this.width / 2,
-          -this.height / 2,
-          this.width,
-          this.height,
-        );
-        redpackCtx.drawImage(
-          this.redpackImg,
-          -this.width / 2,
-          -this.height / 2,
-          this.width,
-          this.height,
-        );
-        redpackCtx.strokeStyle = 'transparent';
-        redpackCtx.stroke();
-        redpackCtx.restore();
-        this.y = nexty;
-
-        const isPointInPath = redpackCtx.isPointInPath(clientX, clientY);
-        if (typeof callback === 'function' && clientX > -1 && clientY > -1) {
-          callback({
-            redpackId: this.redpackId,
-            isPointInPath,
-          });
-        }
-        if (isPointInPath) {
-          // 点击命中
-          this.clear();
-          this.addBubble();
-        } else {
-          this.run(-1, -1);
-        }
-      } else {
-        // 超过边界，回调改元素被销毁的事件
-        if (typeof this.onDestoryed === 'function') {
-          this.onDestoryed(this.redpackId);
-        }
-      }
-    });
   }
 
   // 添加气泡
@@ -240,7 +147,7 @@ class RedpackItem {
       if (!this.bubbleCtx) {
         return;
       }
-      this.bubbleCtx.clearRect(nextx, nexty, width, height);
+      this.bubbleCtx.clearRect(nextx - 10, nexty - 10, width + 20, height + 20);
 
       if (alpha > 0) {
         this.bubbleCtx.save();
@@ -256,32 +163,7 @@ class RedpackItem {
     requestAnimationFramePolyfill(bbs);
   }
 
-  clear() {
-    const ss = 4;
-
-    const { redpackCtx } = this;
-    if (redpackCtx) {
-      redpackCtx.clearRect(
-        this.x - ss,
-        this.y - ss,
-        this.width + ss * 2,
-        this.height + ss * 2,
-      );
-      redpackCtx.save();
-      redpackCtx.translate(this.x + this.width / 2, this.y + this.height / 2);
-      redpackCtx.rotate(this.angle);
-      redpackCtx.clearRect(
-        -this.width / 2 - ss,
-        -this.height / 2 - ss,
-        this.width + ss * 2,
-        this.height + ss * 2,
-      );
-      redpackCtx.restore();
-    }
-  }
-
   stop() {
-    this.clear();
     cancelAnimationFramePolyfill(this.requestId);
   }
 }

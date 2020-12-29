@@ -22,6 +22,7 @@ interface MonitorProps {
 interface RedpackRainProps {
   selector: HTMLElement;
   interval: number;
+  eventType: 'click' | 'touchstart';
   redpack: RedpackRainItem;
   bubble: BubbleProps;
   onClick?: (isHit: boolean) => void;
@@ -31,6 +32,7 @@ interface RedpackRainProps {
 const defaultsConfig: RedpackRainProps = {
   selector: document.body,
   interval: 1600,
+  eventType: 'touchstart',
   redpack: {
     speedMin: 10,
     speedMax: 10,

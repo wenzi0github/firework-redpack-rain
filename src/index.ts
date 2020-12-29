@@ -27,6 +27,7 @@ interface MonitorProps {
 interface RedpackRainProps {
   selector: HTMLElement | string;
   interval?: number;
+  eventType?: 'click' | 'touchstart';
   redpack?: RedpackRainItem;
   bubble?: BubbleProps;
   onClick?: (isHit: boolean) => void;
@@ -135,7 +136,7 @@ class RedpackRain {
   private getRedpackItemX(width: number): number {
     let x = this.lastRedpackX;
     do {
-      x = Math.floor(Math.random() * (this.parentClientRect.width - width * 2) + width); // 避免红包产生在边界
+      x = Math.floor(Math.random() * (this.parentClientRect.width - width * 3) + width); // 避免红包产生在边界
     } while (Math.abs(this.lastRedpackX - x) <= width * 1.5); // 避免先后两个红包重叠
 
     this.lastRedpackX = x;
@@ -172,30 +173,57 @@ class RedpackRain {
     this.redpackItemList[redpackItemId] = redpackItem;
   }
 
-  private clickListener = (event: MouseEvent) => {
-    const { clientX, clientY } = event;
+  private clickListener = (event: MouseEvent | TouchEvent) => {
+    if (typeof this.config.onClick !== 'function') {
+      return;
+    }
+    let touchClients: Array<{ clientX: number; clientY: number }> = []; // 手指触控的坐标
+    if (event.type === 'touchstart') {
+      // touchstart
+      touchClients = Array.prototype.slice.call((event as TouchEvent).touches).map(touch => ({
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+      }));
+    } else {
+      // click
+      touchClients = [
+        {
+          clientX: (event as MouseEvent).clientX,
+          clientY: (event as MouseEvent).clientY,
+        },
+      ];
+    }
+
     const { left, top } = this.parentClientRect;
 
     if (this.requestId) {
       cancelAnimationFramePolyfill(this.requestId);
     }
-    // eslint-disable-next-line no-restricted-syntax
-    for (const key in this.redpackItemList) {
-      const redpackItem = this.redpackItemList[key];
+    touchClients.forEach(({ clientX, clientY }) => {
+      const myClientX = (clientX - left) * this.ratio;
+      const myClientY = (clientY - top) * this.ratio;
+      // eslint-disable-next-line no-restricted-syntax
+      for (const key in this.redpackItemList) {
+        const redpackItem = this.redpackItemList[key];
+        const { x, y, width, height } = redpackItem;
 
-      redpackItem.render(
-        (clientX - left) * this.ratio,
-        (clientY - top) * this.ratio,
-        ({ redpackId, isPointInPath }) => {
-          if (typeof this.config.onClick === 'function') {
-            if (isPointInPath) {
-              delete this.redpackItemList[redpackId];
-            }
-            this.config.onClick(isPointInPath);
-          }
-        },
-      );
-    }
+        const diff = 14;
+        let isHited = false;
+        if (
+          myClientX >= x - diff
+          && myClientX <= x + width + diff
+          && myClientY >= y - diff
+          && myClientY <= y + height + diff
+        ) {
+          delete this.redpackItemList[key];
+          redpackItem.addBubble();
+          isHited = true;
+        }
+        if (typeof this.config.onClick === 'function') {
+          this.config.onClick(isHited);
+        }
+      }
+    });
     this.render();
   };
 
@@ -222,15 +250,12 @@ class RedpackRain {
   start() {
     // 先停止上一个
     this.stop();
-    this.config.selector.addEventListener('click', this.clickListener, false);
+    this.config.selector.addEventListener(this.config.eventType, this.clickListener, false);
 
     this.createRedpackItem();
 
     // 创建一个新的红包雨
     this.timer = setInterval(() => {
-      if (document.visibilityState === 'hidden' || document.hidden) {
-        return;
-      }
       this.createRedpackItem();
     }, this.config.interval);
     this.render();
@@ -261,7 +286,7 @@ class RedpackRain {
       this.requestId = null;
     }
     this.rainCtx?.clearRect(0, 0, this.parentClientRect.width, this.parentClientRect.height);
-    this.config.selector.removeEventListener('click', this.clickListener);
+    this.config.selector.removeEventListener(this.config.eventType, this.clickListener);
 
     this.pageVisibility?.destory();
   }
