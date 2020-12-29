@@ -268,7 +268,7 @@ class RedpackRain {
   // eslint-disable-next-line @typescript-eslint/member-ordering
   start() {
     // 先停止上一个
-    this.stop();
+    this.clear();
     this.config.selector.addEventListener(this.config.eventType, this.clickListener, false);
 
     this.createRedpackItem();
@@ -294,8 +294,9 @@ class RedpackRain {
     });
   }
 
+  // 清空面板，但数据还在
   // eslint-disable-next-line @typescript-eslint/member-ordering
-  stop() {
+  clear() {
     // 停止产生新的红包
     if (this.timer) {
       clearInterval(this.timer);
@@ -308,11 +309,17 @@ class RedpackRain {
       this.requestId = null;
     }
 
-    // 清空已存储的红包
-    this.redpackItemList = {};
-
     // 清空面板
     this.rainCtx?.clearRect(0, 0, this.parentClientRect.width, this.parentClientRect.height);
+  }
+
+  // 清除所有的数据和绑定的事件
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  stop() {
+    this.clear();
+
+    // 清空已存储的红包
+    this.redpackItemList = {};
 
     // 解除已绑定的事件
     this.config.selector.removeEventListener(this.config.eventType, this.clickListener);
