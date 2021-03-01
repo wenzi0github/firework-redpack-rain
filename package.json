@@ -1,5 +1,5 @@
 {
-  "name": "@tencent/firework-redpack-rain",
+  "name": "firework-redpack-rain",
   "version": "1.0.8",
   "description": "烟花活动的红包雨",
   "keywords": [
@@ -8,7 +8,7 @@
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "repository": "http://git.code.oa.com/news-gh-team/firework-redpack-rain.git",
+  "repository": "https://github.com/wenzi0github/firework-redpack-rain.git",
   "files": [
     "dist"
   ],
@@ -17,7 +17,6 @@
     "eslint": "./node_modules/.bin/eslint --fix src/**/*.ts",
     "build": "webpack --config webpack.config.js"
   },
-  "author": "skeetershi",
   "license": "ISC",
   "devDependencies": {
     "@commitlint/cli": "^9.1.2",
