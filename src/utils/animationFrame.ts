@@ -7,4 +7,4 @@ export const requestAnimationFramePolyfill =
   };
 
 export const cancelAnimationFramePolyfill =
-  window.cancelAnimationFrame || clearTimeout;
+  window.cancelAnimationFrame || window.webkitCancelAnimationFrame || clearTimeout;
