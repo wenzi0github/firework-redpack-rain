@@ -156,11 +156,11 @@ class RedpackItem {
         nexty -= speed;
         this.bubbleCtx.drawImage(bubbleImg, nextx, nexty, width, height);
         this.bubbleCtx.restore();
-        requestAnimationFramePolyfill(bbs);
+        this.requestId = requestAnimationFramePolyfill(bbs);
       }
     };
 
-    requestAnimationFramePolyfill(bbs);
+    this.requestId = requestAnimationFramePolyfill(bbs);
   }
 
   stop() {
