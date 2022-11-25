@@ -160,7 +160,7 @@ class RedpackRain {
       redpackCtx: this.rainCtx,
       bubbleCtx: this.bubbleCtx,
       x,
-      y: -this.config.redpack.height,
+      y: -height,
       redpackImgUrl: imgUrl,
       width,
       height,
