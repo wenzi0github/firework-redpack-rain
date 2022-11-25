@@ -1,5 +1,9 @@
 # 烟火活动的红包雨
 
+这里主要存放的是源码，构建好的包已经发布在内网了。
+
+[如何打造一款高可用的全屏红包雨](https://www.xiabingbao.com/post/canvas/canvas-redpackrain.html)。
+
 ## 引入
 
 ```shell
